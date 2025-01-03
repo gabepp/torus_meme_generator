@@ -23,7 +23,6 @@ body {
   overflow: visible; /* Add scroll functionality for vertical overflow */
 }
 
-
 .meme-generator label {
   display: block;
   font-weight: bold;
@@ -49,6 +48,25 @@ body {
   box-shadow: 0px 10px 10px blue; /* Add glow effect on focus */
 }
 
+/* Font Size Container */
+.font-size-container {
+  position: relative; /* Establishes a positioning context for absolute elements inside */
+  width: 100%; /* Takes full width of the parent container */
+  margin: 20px 0; /* Adds vertical spacing */
+}
+
+/* Font Size Display */
+#fontSizeDisplay {
+  position: absolute; /* Allows positioning relative to the .font-size-container */
+  top: -20px; /* Positions the number above the slider */
+  left: 0%; /* Initial position; will be updated via JavaScript */
+  transform: translateX(-50%); /* Centers the number horizontally */
+  color: blue; /* Blue text color */
+  font-size: 18px; /* Adjusts the font size */
+  font-weight: bold; /* Makes the text bold for emphasis */
+  white-space: nowrap; /* Prevents text from wrapping */
+  pointer-events: none; /* Allows clicks to pass through to the slider */
+}
 
 #meme {
   width: 100%;
@@ -75,10 +93,10 @@ body {
   -webkit-appearance: none; /* Remove default styling for thumb */
   appearance: none;
   width: 15px;
-  height: 45px;
-  background: blue; /* Thumb color */
-  border: 2px solid black; /* Match the blue theme */
-   /* Circular thumb */
+  height: 45px; /* Changed from 45px to 15px for a circular thumb */
+  background: black; /* Thumb color */
+  border: 1px solid blue; /* Match the blue theme */
+  border-radius: 0%; /* Makes the thumb circular */
   cursor: pointer; /* Change cursor to pointer */
 }
 
@@ -235,7 +253,7 @@ body {
   text-align: center; /* Center-align the text */
   font-size: 18px; /* Adjust font size as needed */
   color: white; /* Match the theme with blue text */
-  margin-bottom: 20px; /* Add space below the text */
-  margin-top: 0px;
+  margin-bottom: 5px; /* Add space below the text */
+  margin-top: 20px;
   font-family: sans-serif; /* Match your theme's font */
 }

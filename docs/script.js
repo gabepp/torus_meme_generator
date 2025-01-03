@@ -2,14 +2,61 @@ const imageFileInput = document.querySelector("#imageFileInput");
 const canvas = document.querySelector("#meme");
 const topTextInput = document.querySelector("#topTextInput");
 const bottomTextInput = document.querySelector("#bottomTextInput");
+const fontSizeSlider = document.querySelector("#fontSizeSlider");
 
 let image = new Image();
 image.src = "windows.png"; // Replace with the path to your placeholder image
 
+// Select the font size display element
+const fontSizeDisplay = document.querySelector("#fontSizeDisplay");
+
+// Function to update the font size display and regenerate the meme
+function updateFontSizeDisplay(value) {
+  fontSizeDisplay.textContent = value;
+
+  // Calculate the percentage position of the slider
+  const min = parseInt(fontSizeSlider.min);
+  const max = parseInt(fontSizeSlider.max);
+  const percentage = (value - min) / (max - min);
+
+  // Get the slider's width
+  const sliderWidth = fontSizeSlider.offsetWidth;
+
+  // Calculate the position for the display
+  // Adjust for the thumb's width (assuming 15px as set in CSS)
+  const thumbWidth = 15; // Must match the CSS thumb width
+  const position = percentage * (sliderWidth - 2.5 * thumbWidth) + (thumbWidth);
+
+  // Update the left position of the font size display
+  fontSizeDisplay.style.left = `${position}px`;
+
+  // Regenerate the meme with the new font size
+  updateMemeCanvas(
+    canvas,
+    image,
+    topTextInput.value,
+    bottomTextInput.value,
+    value
+  );
+}
+
+// Initialize the font size display on page load
+document.addEventListener("DOMContentLoaded", () => {
+  const initialFontSize = fontSizeSlider.value;
+  updateFontSizeDisplay(initialFontSize);
+});
+
+// Update the font size display as the slider moves
+fontSizeSlider.addEventListener("input", (e) => {
+  const fontSize = e.target.value;
+  updateFontSizeDisplay(fontSize);
+});
+
 // Draw the placeholder image initially
 image.onload = () => {
-  updateMemeCanvas(canvas, image, topTextInput.value, bottomTextInput.value);
+  updateMemeCanvas(canvas, image, topTextInput.value, bottomTextInput.value, fontSizeSlider.value);
 };
+
 imageFileInput.addEventListener("change", (e) => {
   const imageDataUrl = URL.createObjectURL(e.target.files[0]);
 
@@ -23,7 +70,8 @@ imageFileInput.addEventListener("change", (e) => {
         canvas,
         image,
         topTextInput.value,
-        bottomTextInput.value
+        bottomTextInput.value,
+        fontSizeSlider.value
       );
     },
     { once: true }
@@ -43,17 +91,6 @@ topTextInput.addEventListener("input", () => {
 
 bottomTextInput.addEventListener("input", () => {
   bottomTextInput.value = bottomTextInput.value.toUpperCase(); // Convert to uppercase
-  updateMemeCanvas(
-    canvas,
-    image,
-    topTextInput.value,
-    bottomTextInput.value,
-    fontSizeSlider.value
-  );
-});
-const fontSizeSlider = document.querySelector("#fontSizeSlider");
-
-fontSizeSlider.addEventListener("input", () => {
   updateMemeCanvas(
     canvas,
     image,

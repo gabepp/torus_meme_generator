@@ -4,172 +4,81 @@
   <meta charset="UTF-8">
   <title>EMERGENCE</title>
   <link rel="stylesheet" href="./style.css">
-
 </head>
 <body>
-<!-- partial:index.partial.html -->
+  <!-- partial:index.partial.html -->
 
-<img src="EMERGENCE.png" alt="Image Above Input" class="input-image">
-<div class="meme-generator">
+  <img src="EMERGENCE.png" alt="Image Above Input" class="input-image">
+  <div class="meme-generator">
 
-  <div class="centered-container">
-    <!-- New Hyperlink -->
-    <a href="https://twitter.com/torus_network" 
-       target="_blank" 
-       class="hashtag-link">
-      #TORUSMEMEMAKER
-    </a>
+    <div class="centered-container">
+      <!-- New Hyperlink -->
+      <a href="https://twitter.com/torus_network" 
+         target="_blank" 
+         class="hashtag-link">
+        #TORUSMEMEMAKER
+      </a>
+    </div>
+
+    <p class="centered-text">
+      make memes to please our thermodynamic overlords <br>
+      upload an image below and add text and stickers <br>
+    </p>
+
+    <label class="custom-file-upload">
+      <input type="file" id="imageFileInput" />
+      SELECT IMAGE
+    </label>
+
+    <input type="text" id="topTextInput" placeholder="TOP TEXT" style="text-transform: uppercase;" autocomplete="off">
+
+    <input type="text" id="bottomTextInput" placeholder="BOTTOM TEXT" style="text-transform: uppercase;" autocomplete="off">
+
+    <!-- Font Size Display and Slider -->
+    <div class="font-size-container">
+      <span id="fontSizeDisplay">20</span>
+      <input type="range" id="fontSizeSlider" min="10" max="50" value="20">
+    </div>
+
+    <canvas id="meme"></canvas>
+
+    <div id="stickersContainer">
+      <!-- Sticker Images -->
+      <img src="logo0.png" alt="Sticker 1" class="sticker-option" data-sticker-src="logo0.png" width="50" />
+      <img src="logo1.png" alt="Sticker 1" class="sticker-option" data-sticker-src="logo1.png" width="50" />
+      <img src="logo2.png" alt="Sticker 2" class="sticker-option" data-sticker-src="logo2.png" width="50" />
+      <img src="logo3.png" alt="Sticker 3" class="sticker-option" data-sticker-src="logo3.png" width="50" />
+      <img src="logo4.png" alt="Sticker 1" class="sticker-option" data-sticker-src="logo4.png" width="50" />
+      <img src="logo5.png" alt="Sticker 1" class="sticker-option" data-sticker-src="logo5.png" width="50" />
+      <img src="logo6.png" alt="Sticker 2" class="sticker-option" data-sticker-src="logo6.png" width="50" />
+      <img src="logo7.png" alt="Sticker 3" class="sticker-option" data-sticker-src="logo7.png" width="50" />
+      <img src="logo8.png" alt="Sticker 1" class="sticker-option" data-sticker-src="logo8.png" width="50" />
+      <img src="logo9.png" alt="Sticker 3" class="sticker-option" data-sticker-src="logo9.png" width="50" />
+      <img src="logo11.png" alt="Sticker 1" class="sticker-option" data-sticker-src="logo11.png" width="50" />
+      <img src="logo12.png" alt="Sticker 2" class="sticker-option" data-sticker-src="logo12.png" width="50" />
+      <img src="logo13.png" alt="Sticker 3" class="sticker-option" data-sticker-src="logo13.png" width="50" />
+      <img src="logo14.png" alt="Sticker 2" class="sticker-option" data-sticker-src="logo14.png" width="50" />
+      <img src="logo15.png" alt="Sticker 3" class="sticker-option" data-sticker-src="logo15.png" width="50" />
+    </div>
+
+    <p class="doughnut-text">
+      a cup of coffee while you wait for your memes to generate :)
+    </p>
+    
+    <div class="doughnut">
+      <div class="overlay-top-text">EMERGE</div>
+      <div class="overlay-bottom-text">BOTTOM TEXT</div>
+      <iframe 
+        scrolling="no" 
+        title="modified_doughnut" 
+        src="https://www.geogebra.org/material/iframe/id/yp6jkd2b/width/1512/height/857/border/888888/sfsb/true/smb/false/stb/false/stbh/false/ai/false/asb/false/sri/false/rc/false/ld/false/sdz/true/ctl/false"
+        width="500px" 
+        height="284px" 
+        style="border:1px blue;"> 
+      </iframe>
+    </div>
   </div>
 
-  <p class="centered-text">make memes to please our thermodynamic overlords <br>
-    upload an image below and add text and stickers <br>
-  </p>
-
-  <label class="custom-file-upload">
-    <input type="file" id="imageFileInput" />
-    SELECT IMAGE
-  </label>
-
-  <input type="text" id="topTextInput" placeholder="TOP TEXT" style="text-transform: uppercase;" autocomplete="off">
-
-  <input type="text" id="bottomTextInput" placeholder="BOTTOM TEXT" style="text-transform: uppercase;" autocomplete="off">
-
-  <label for="fontSizeSlider"></label>
-  <input type="range" id="fontSizeSlider" min="10" max="50" value="20">
-
-  <canvas id="meme"></canvas>
-
-  <div id="stickersContainer">
-    <!-- <p class = "sticker-text">don't forget to add the torus logo!</p> -->
-    <img
-      src="logo0.png"
-      alt="Sticker 1"
-      class="sticker-option"
-      data-sticker-src="logo0.png"
-      width="50"
-    />
-    <img
-      src="logo1.png"
-      alt="Sticker 1"
-      class="sticker-option"
-      data-sticker-src="logo1.png"
-      width="50"
-    />
-    <img
-      src="logo2.png"
-      alt="Sticker 2"
-      class="sticker-option"
-      data-sticker-src="logo2.png"
-      width="50"
-    />
-    <img
-      src="logo3.png"
-      alt="Sticker 3"
-      class="sticker-option"
-      data-sticker-src="logo3.png"
-      width="50"
-    />
-    <img
-    src="logo4.png"
-    alt="Sticker 1"
-    class="sticker-option"
-    data-sticker-src="logo4.png"
-    width="50"
-  />
-  <img
-    src="logo5.png"
-    alt="Sticker 1"
-    class="sticker-option"
-    data-sticker-src="logo5.png"
-    width="50"
-  />
-  <img
-    src="logo6.png"
-    alt="Sticker 2"
-    class="sticker-option"
-    data-sticker-src="logo6.png"
-    width="50"
-  />
-  <img
-    src="logo7.png"
-    alt="Sticker 3"
-    class="sticker-option"
-    data-sticker-src="logo7.png"
-    width="50"
-  />
-  <img
-    src="logo8.png"
-    alt="Sticker 1"
-    class="sticker-option"
-    data-sticker-src="logo8.png"
-    width="50"
-  />
-  <img
-    src="logo9.png"
-    alt="Sticker 3"
-    class="sticker-option"
-    data-sticker-src="logo9.png"
-    width="50"
-  />
-  <img
-  src="logo11.png"
-  alt="Sticker 1"
-  class="sticker-option"
-  data-sticker-src="logo11.png"
-  width="50"
-  />
-  <img
-  src="logo12.png"
-  alt="Sticker 2"
-  class="sticker-option"
-  data-sticker-src="logo12.png"
-  width="50"
-  />
-  <img
-  src="logo13.png"
-  alt="Sticker 3"
-  class="sticker-option"
-  data-sticker-src="logo13.png"
-  width="50"
-  />
-  <img
-  src="logo14.png"
-  alt="Sticker 2"
-  class="sticker-option"
-  data-sticker-src="logo14.png"
-  width="50"
-  />
-  <img
-  src="logo15.png"
-  alt="Sticker 3"
-  class="sticker-option"
-  data-sticker-src="logo15.png"
-  width="50"
-  />
-  </div>
-
-  <p class="dougnut-text">
-    a cup of coffee while you wait for your memes to generate :)
-  </p>
-  
-
-  <div class="doughnut">
-    <div class="overlay-top-text">EMERGE</div>
-    <div class="overlay-bottom-text">BOTTOM TEXT</div>
-    <iframe 
-      scrolling="no" 
-      title="modified_doughnut" 
-      src="https://www.geogebra.org/material/iframe/id/yp6jkd2b/width/1512/height/857/border/888888/sfsb/true/smb/false/stb/false/stbh/false/ai/false/asb/false/sri/false/rc/false/ld/false/sdz/true/ctl/false"
-      width="500px" 
-      height="284px" 
-      style="border:1px blue;"> 
-    </iframe>
-  </div>
-</div>
-
-
-
-  <script  src="./script.js"></script>
-
+  <script src="./script.js"></script>
 </body>
 </html>
