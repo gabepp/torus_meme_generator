@@ -25,7 +25,7 @@ function updateFontSizeDisplay(value) {
   // Calculate the position for the display
   // Adjust for the thumb's width (assuming 15px as set in CSS)
   const thumbWidth = 15; // Must match the CSS thumb width
-  const position = percentage * (sliderWidth - 2.5 * thumbWidth) + (thumbWidth);
+  const position = percentage * (sliderWidth - 2.5 * thumbWidth) + (1.25 * thumbWidth);
 
   // Update the left position of the font size display
   fontSizeDisplay.style.left = `${position}px`;
@@ -246,49 +246,49 @@ function updateMemeCanvas(canvas, image, topText, bottomText, fontSize = 20) {
   wrapText(ctx, bottomText, width / 2, height - yOffset, width - 20, lineHeight, adjustedFontSize, "up");
 }
 
+
 function addStickers(canvas) {
-  // Store multiple stickers in an array
+  // *** Instead of re-defining a new array, store them globally
+  // *** We'll define them as 'stickers' within this function scope
+  // *** but must also reference them from the customSticker code
+  
   const stickers = [];
-  let selectedSticker = null; // Which sticker is currently selected?
+  let selectedSticker = null; // local reference (this is overshadowing the custom code, so see note below)
 
   // “Hitbox” sizes
   const RESIZE_HANDLE_SIZE = 20;
-  const DELETE_ICON_SIZE = 30; // Increased size
+  const DELETE_ICON_SIZE = 30;
 
-  // For dragging/resizing
   let isDragging = false;
   let isResizing = false;
-  let offsetX, offsetY; // Track drag offset for the selected sticker
+  let offsetX, offsetY;
 
-  // Listen for clicks on sticker options to add a new sticker
+  // Listen for built-in sticker clicks
   const stickerOptions = document.querySelectorAll(".sticker-option");
   stickerOptions.forEach((imgEl) => {
+    // Only apply if it has data-sticker-src
+    if (!imgEl.dataset.stickerSrc) return; 
     imgEl.addEventListener("click", () => {
-      // Create a new Image object
       const stickerImage = new Image();
       stickerImage.src = imgEl.dataset.stickerSrc;
-
-      // Once it loads, push a new sticker object to the array
       stickerImage.onload = () => {
         const newSticker = {
           image: stickerImage,
-          x: canvas.width / 2 - stickerImage.width / 4, // center-ish
+          x: canvas.width / 2 - stickerImage.width / 4,
           y: canvas.height / 2 - stickerImage.height / 4,
           width: stickerImage.width / 2,
           height: stickerImage.height / 2,
         };
         stickers.push(newSticker);
-
-        // Make this new sticker selected and bring to front
         selectedSticker = newSticker;
         redrawMemeAndStickers();
       };
     });
   });
 
-  // Redraw function that draws the meme + *all* stickers
+  // The local redraw function
   function redrawMemeAndStickers() {
-    // 1) Redraw the meme background + text
+    // 1) Re-draw the meme background + text
     updateMemeCanvas(
       canvas,
       image,
@@ -297,33 +297,25 @@ function addStickers(canvas) {
       fontSizeSlider.value
     );
 
-    // 2) Draw each sticker in order (first in array = behind)
+    // 2) draw each sticker
     const ctx = canvas.getContext("2d");
-    stickers.forEach((sticker) => {
-      ctx.drawImage(
-        sticker.image,
-        sticker.x,
-        sticker.y,
-        sticker.width,
-        sticker.height
-      );
+    stickers.forEach((st) => {
+      ctx.drawImage(st.image, st.x, st.y, st.width, st.height);
     });
 
-    // If we have a selected sticker, draw bounding box, resize handle, delete icon
+    // bounding box if selected
     if (selectedSticker) {
       drawStickerUI(selectedSticker, ctx);
     }
   }
 
-  // Helper: draw bounding box, resize handle, and a delete "X" icon
   function drawStickerUI(sticker, ctx) {
-    // Bounding box
     ctx.save();
     ctx.strokeStyle = "blue";
     ctx.lineWidth = 2;
     ctx.strokeRect(sticker.x, sticker.y, sticker.width, sticker.height);
-    
-    // Resize handle (bottom-right)
+
+    // resize handle
     ctx.fillStyle = "blue";
     ctx.fillRect(
       sticker.x + sticker.width - RESIZE_HANDLE_SIZE / 2,
@@ -331,84 +323,56 @@ function addStickers(canvas) {
       RESIZE_HANDLE_SIZE,
       RESIZE_HANDLE_SIZE
     );
-    
-    // === Draw the centered delete "X" (top-right corner) ===
-    const DELETE_ICON_SIZE = 30; // Increased size for better visibility
-    
-    // Calculate the top-right corner coordinates
+
+    // delete "X" top-right
     const cornerX = sticker.x + sticker.width;
     const cornerY = sticker.y;
-    
-    // Position the "X" so that its center aligns with the corner
     const deleteX = cornerX - DELETE_ICON_SIZE / 2;
     const deleteY = cornerY - DELETE_ICON_SIZE / 2;
-    
-    // Draw the "X"
+
     ctx.strokeStyle = "red";
-    ctx.lineWidth = 4; // Thicker lines for better visibility
-    ctx.lineCap = "square"; // Square line endings for a pixelated look
-    
-    // Draw two diagonal lines to form the "X"
+    ctx.lineWidth = 4;
+    ctx.lineCap = "square";
     ctx.beginPath();
     ctx.moveTo(deleteX, deleteY);
     ctx.lineTo(deleteX + DELETE_ICON_SIZE, deleteY + DELETE_ICON_SIZE);
     ctx.moveTo(deleteX + DELETE_ICON_SIZE, deleteY);
     ctx.lineTo(deleteX, deleteY + DELETE_ICON_SIZE);
     ctx.stroke();
-    
     ctx.restore();
   }
 
-  // Helper: check if mouse is inside the given sticker
-  function isInsideSticker(mouseX, mouseY, sticker) {
+  function isInsideSticker(x, y, sticker) {
     return (
-      mouseX >= sticker.x &&
-      mouseX <= sticker.x + sticker.width &&
-      mouseY >= sticker.y &&
-      mouseY <= sticker.y + sticker.height
+      x >= sticker.x &&
+      x <= sticker.x + sticker.width &&
+      y >= sticker.y &&
+      y <= sticker.y + sticker.height
     );
   }
-
-  // Helper: check if mouse is on the resize handle (bottom-right)
-  function isOnResizeHandle(mouseX, mouseY, sticker) {
+  function isOnResizeHandle(x, y, sticker) {
     const rx = sticker.x + sticker.width - RESIZE_HANDLE_SIZE;
     const ry = sticker.y + sticker.height - RESIZE_HANDLE_SIZE;
-    return (
-      mouseX >= rx &&
-      mouseX <= rx + RESIZE_HANDLE_SIZE &&
-      mouseY >= ry &&
-      mouseY <= ry + RESIZE_HANDLE_SIZE
-    );
+    return (x >= rx && x <= rx + RESIZE_HANDLE_SIZE && y >= ry && y <= ry + RESIZE_HANDLE_SIZE);
   }
-
-  // Helper: check if mouse is on the delete icon (top-right)
-  function isOnDeleteIcon(mouseX, mouseY, sticker) {
-    const DELETE_ICON_SIZE = 30; // Must match the size used in drawStickerUI
+  function isOnDeleteIcon(x, y, sticker) {
     const cornerX = sticker.x + sticker.width;
     const cornerY = sticker.y;
+    const DELETE_ICON_SIZE = 30;
     const deleteX = cornerX - DELETE_ICON_SIZE / 2;
     const deleteY = cornerY - DELETE_ICON_SIZE / 2;
-    
-    return (
-      mouseX >= deleteX &&
-      mouseX <= deleteX + DELETE_ICON_SIZE &&
-      mouseY >= deleteY &&
-      mouseY <= deleteY + DELETE_ICON_SIZE
-    );
+    return (x >= deleteX && x <= deleteX + DELETE_ICON_SIZE &&
+            y >= deleteY && y <= deleteY + DELETE_ICON_SIZE);
   }
 
-  // On mousedown: figure out if user clicked any sticker
   canvas.addEventListener("mousedown", (e) => {
     if (!stickers.length) return;
-
-    // Scale mouse coords if canvas is resized in CSS
     const rect = canvas.getBoundingClientRect();
     const scaleX = canvas.width / rect.width;
     const scaleY = canvas.height / rect.height;
     const mouseX = (e.clientX - rect.left) * scaleX;
     const mouseY = (e.clientY - rect.top) * scaleY;
 
-    // 1) Find the topmost sticker clicked (loop from end to start)
     let foundSticker = null;
     for (let i = stickers.length - 1; i >= 0; i--) {
       if (isInsideSticker(mouseX, mouseY, stickers[i])) {
@@ -416,51 +380,44 @@ function addStickers(canvas) {
         break;
       }
     }
-
-    // If no sticker was clicked, unselect any selected
     if (!foundSticker) {
       selectedSticker = null;
       redrawMemeAndStickers();
       return;
     }
 
-    // If we found a sticker, bring it to front by splicing & pushing
+    // bring to front
     const idx = stickers.indexOf(foundSticker);
-    stickers.splice(idx, 1); // remove from array
-    stickers.push(foundSticker); // add on top
+    stickers.splice(idx, 1);
+    stickers.push(foundSticker);
     selectedSticker = foundSticker;
     redrawMemeAndStickers();
 
-    // 2) Check if the user clicked the "delete" icon
+    // check delete
     if (isOnDeleteIcon(mouseX, mouseY, selectedSticker)) {
-      // Remove the sticker
-      stickers.pop(); // since we just moved it to the end
+      stickers.pop();
       selectedSticker = null;
       redrawMemeAndStickers();
       return;
     }
-
-    // 3) Check if the user clicked on the resize handle
+    // check resize
     if (isOnResizeHandle(mouseX, mouseY, selectedSticker)) {
       isResizing = true;
       isDragging = false;
       return;
     }
-
-    // 4) Otherwise, user is clicking inside the sticker => drag
+    // else drag
     isDragging = true;
     isResizing = false;
     offsetX = mouseX - selectedSticker.x;
     offsetY = mouseY - selectedSticker.y;
   });
 
-  // On mousemove: if dragging/resizing, update positions and cursor
   canvas.addEventListener("mousemove", (e) => {
     if (!selectedSticker) {
       canvas.style.cursor = "default";
       return;
     }
-
     const rect = canvas.getBoundingClientRect();
     const scaleX = canvas.width / rect.width;
     const scaleY = canvas.height / rect.height;
@@ -468,46 +425,165 @@ function addStickers(canvas) {
     const mouseY = (e.clientY - rect.top) * scaleY;
 
     if (isDragging) {
-      // Move sticker
       selectedSticker.x = mouseX - offsetX;
       selectedSticker.y = mouseY - offsetY;
       redrawMemeAndStickers();
     } else if (isResizing) {
-      // Resize sticker
-      const newWidth = mouseX - selectedSticker.x;
-      const newHeight = mouseY - selectedSticker.y;
-      if (newWidth > 20 && newHeight > 20) {
-        selectedSticker.width = newWidth;
-        selectedSticker.height = newHeight;
+      const newW = mouseX - selectedSticker.x;
+      const newH = mouseY - selectedSticker.y;
+      if (newW > 20 && newH > 20) {
+        selectedSticker.width = newW;
+        selectedSticker.height = newH;
         redrawMemeAndStickers();
       }
-    }
-
-    // Update cursor style based on hover position
-    if (isOnDeleteIcon(mouseX, mouseY, selectedSticker)) {
-      canvas.style.cursor = "pointer";
-    } else if (isOnResizeHandle(mouseX, mouseY, selectedSticker)) {
-      canvas.style.cursor = "nwse-resize";
-    } else if (isInsideSticker(mouseX, mouseY, selectedSticker)) {
-      canvas.style.cursor = "move";
     } else {
-      canvas.style.cursor = "default";
+      // update cursor style
+      if (isOnDeleteIcon(mouseX, mouseY, selectedSticker)) {
+        canvas.style.cursor = "pointer";
+      } else if (isOnResizeHandle(mouseX, mouseY, selectedSticker)) {
+        canvas.style.cursor = "nwse-resize";
+      } else if (isInsideSticker(mouseX, mouseY, selectedSticker)) {
+        canvas.style.cursor = "move";
+      } else {
+        canvas.style.cursor = "default";
+      }
     }
   });
 
-  // On mouseup: stop dragging/resizing
   canvas.addEventListener("mouseup", () => {
     isDragging = false;
     isResizing = false;
     canvas.style.cursor = "default";
   });
 
-  // On mouseleave: also stop
   canvas.addEventListener("mouseleave", () => {
     isDragging = false;
     isResizing = false;
     canvas.style.cursor = "default";
   });
+
+  // =========== CUSTOM STICKER UPLOAD FIX ===========
+  // We hook into your existing 'stickers' array & 'redrawMemeAndStickers' inside addStickers
+  const customStickerInput = document.querySelector("#customStickerInput");
+  customStickerInput.addEventListener("change", (ev) => {
+    const file = ev.target.files[0];
+    if (!file) return;
+    const url = URL.createObjectURL(file);
+    const customImg = new Image();
+    customImg.src = url;
+    customImg.onload = () => {
+      // Scale to avoid enormous images
+      const scaled = scaleToCanvas(customImg, canvas); 
+      const newSticker = {
+        image: scaled.img,
+        x: canvas.width/2 - scaled.width/2,
+        y: canvas.height/2 - scaled.height/2,
+        width: scaled.width,
+        height: scaled.height
+      };
+      stickers.push(newSticker);
+      selectedSticker = newSticker;
+      redrawMemeAndStickers();
+    };
+  });
+
+  // Helper for scaling large images
+  function scaleToCanvas(img, canvas) {
+    // Scale to at most half the canvas size
+    let maxW = canvas.width * 0.5;
+    let maxH = canvas.height * 0.5;
+    let w = img.width;
+    let h = img.height;
+    if (w > maxW) {
+      const ratio = maxW / w;
+      w = maxW;
+      h = h * ratio;
+    }
+    if (h > maxH) {
+      const ratio = maxH / h;
+      h = maxH;
+      w = w * ratio;
+    }
+    return { img, width: w, height: h };
+  }
 }
 
+// Call addStickers
 addStickers(canvas);
+
+function downloadMeme() {
+  // Convert the canvas content to a data URL in PNG format
+  const imageURI = canvas.toDataURL("image/png");
+
+  // Create a temporary link element
+  const link = document.createElement("a");
+  link.href = imageURI;
+  link.download = "my_meme.png"; // The default file name
+
+  // Append the link to the body
+  document.body.appendChild(link);
+
+  // Programmatically click the link to trigger the download
+  link.click();
+
+  // Remove the link from the document
+  document.body.removeChild(link);
+}
+
+// Attach the download function to the button's click event
+downloadBtn.addEventListener("click", downloadMeme);
+
+const copyBtn = document.querySelector("#copyBtn"); // Select the copy button
+
+// Function to copy the canvas image to the clipboard
+async function copyMemeToClipboard() {
+  try {
+    // Convert the canvas content to a Blob
+    const blob = await new Promise(resolve => canvas.toBlob(resolve, 'image/png'));
+
+    // Create a ClipboardItem
+    const item = new ClipboardItem({ 'image/png': blob });
+
+    // Write the image to the clipboard
+    await navigator.clipboard.write([item]);
+
+    // Notify the user
+    alert("Meme copied to clipboard!");
+  } catch (error) {
+    console.error("Failed to copy meme: ", error);
+    alert("Failed to copy meme. Please try again.");
+  }
+}
+
+// Attach the copy function to the button's click event
+copyBtn.addEventListener("click", copyMemeToClipboard);
+
+const customStickerInput = document.querySelector("#customStickerInput");
+
+// 2) Listen for file selection
+customStickerInput.addEventListener("change", (e) => {
+  const file = e.target.files[0];
+  if (!file) return; // User canceled or no file chosen
+
+  // Create a new image from the selected file
+  const stickerImageURL = URL.createObjectURL(file);
+  const stickerImage = new Image();
+  stickerImage.src = stickerImageURL;
+
+  // On load, push it into your stickers array
+  stickerImage.onload = () => {
+    // We'll assume you already have an array 'stickers' or use logic from addStickers()
+    const newSticker = {
+      image: stickerImage,
+      x: canvas.width / 2 - stickerImage.width / 4,
+      y: canvas.height / 2 - stickerImage.height / 4,
+      width: stickerImage.width / 2,
+      height: stickerImage.height / 2,
+    };
+
+    // You must have the same logic in your addStickers() function
+    // that defines and uses 'stickers' array & a redraw function
+    stickers.push(newSticker);
+    redrawMemeAndStickers(); // Or whatever function re-draws your stickers on the canvas
+  };
+});

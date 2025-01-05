@@ -39,13 +39,14 @@ body {
   color: blue;
   background-color: black;
   border: 1px solid blue; /* Match the outline style */
+  box-shadow: 0px 0px 10px rgba(0, 0, 255, 0.5); /* Glow effect */
 }
 
 .meme-generator input:focus {
   color: white; /* Keep text blue on focus */
   background-color: black; /* Keep background black on focus */
   border-color: blue; /* Highlight border on focus */
-  box-shadow: 0px 10px 10px blue; /* Add glow effect on focus */
+  box-shadow: 0px 0px 15px  rgba(0, 0, 255, 0.5); /* Add glow effect on focus */
 }
 
 /* Font Size Container */
@@ -75,6 +76,7 @@ body {
   margin-bottom: 20px;
   display: block; /* Ensure proper layout in the container */
   z-index: 2;
+  box-shadow: 0px 0px 15px rgba(0, 0, 255, 0.5); /* Glow effect */
 }
 
 #fontSizeSlider {
@@ -87,6 +89,7 @@ body {
   border: 1px solid blue; /* Blue outline */
   border-radius: 0; /* Flat style */
   cursor: pointer;
+  box-shadow: 0px 0px 15px rgba(0, 0, 255, 0.5); /* Glow effect */
 }
 
 #fontSizeSlider::-webkit-slider-thumb {
@@ -98,6 +101,7 @@ body {
   border: 1px solid blue; /* Match the blue theme */
   border-radius: 0%; /* Makes the thumb circular */
   cursor: pointer; /* Change cursor to pointer */
+  box-shadow: 0px 0px 15px rgba(0, 0, 255, 0.5); /* Glow effect */
 }
 
 #fontSizeSlider::-moz-range-thumb {
@@ -124,6 +128,7 @@ body {
   box-shadow: 0px 0px 15px rgba(0, 0, 255, 0.5); /* Optional glow effect */
   overflow: hidden; /* Ensure no overflow outside the container */
   filter: brightness(1.5);
+  box-shadow: 0px 0px 15px rgba(0, 0, 255, 0.5); /* Glow effect */
 }
 
 .doughnut .overlay-top-text {
@@ -165,19 +170,23 @@ body {
   color: blue !important; /* Text color */
   background: black; /* Button background */
   border: 1px solid blue; /* Match theme outline */
-  border-radius: 5px; /* Optional: rounded corners */
+  border-radius: 0px; /* Optional: rounded corners */
   text-align: center;
   cursor: pointer; /* Pointer cursor for interactivity */
   transition: all 0.3s ease; /* Smooth transition for hover effects */
   margin-top: 20px; /* Add spacing above the button */
   margin-bottom: 30px !important; /* Increase spacing below the button */
+  box-shadow: 0px 0px 15px rgba(0, 0, 255, 0.5); /* Glow effect */
 }
 
 .custom-file-upload:hover {
-  background: #3bd0e6; /* Change background on hover */
-  color: white !important; /* Invert text color */
-  border: 1px solid #3bd0e6; /* Match theme outline */
-  opacity: 0.8;
+  background-color: #3bd0e6; /* Lighter blue on hover */
+  transform: scale(1.05); /* Slightly enlarge the button */
+}
+
+.custom-file-upload:hover:active {
+  background-color: #1a90ff; /* Darker blue on click */
+  transform: scale(1); /* Return to original size */
 }
 
 .custom-file-upload input[type="file"] {
@@ -256,4 +265,93 @@ body {
   margin-bottom: 5px; /* Add space below the text */
   margin-top: 20px;
   font-family: sans-serif; /* Match your theme's font */
+}
+
+
+/* Download Button Styles */
+.button-container {
+  display: flex; /* Enables Flexbox layout */
+  justify-content: center; /* Horizontally centers the buttons within the container */
+  gap: 0px; /* Adds a 20px space between the buttons */
+  margin: 10px auto; /* Adds vertical spacing and centers the container horizontally */
+}
+
+.download-button {
+  display: block;
+  margin: 20px auto; /* Center the button horizontally with spacing */
+  padding: 10px 20px;
+  font-size: 16px;
+  font-weight: bold;
+  color: blue; /* White text color for contrast */
+  background-color: black; /* Blue background to match theme */
+  border: 1px solid blue; /* Remove default border */
+  border-radius: 0px; /* Slightly rounded corners */
+  cursor: pointer; /* Pointer cursor on hover */
+  transition: background-color 0.3s ease, transform 0.2s ease; /* Smooth transitions */
+  box-shadow: 0px 0px 15px rgba(0, 0, 255, 0.5); /* Glow effect */
+}
+
+.download-button:hover {
+  background-color: #3bd0e6; /* Lighter blue on hover */
+  transform: scale(1.05); /* Slightly enlarge the button */
+}
+
+.download-button:active {
+  background-color: #1a90ff; /* Darker blue on click */
+  transform: scale(1); /* Return to original size */
+}
+
+.download-copy {
+  flex-direction: row;
+}
+
+.custom-sticker-upload {
+  /* Match the size of other stickers */
+  width: 55px;
+  height: 55px;
+  display: inline-flex; /* So we can center the plus sign */
+  align-items: center; /* Vertically center content */
+  justify-content: center; /* Horizontally center content */
+  background-color: black; /* Or another color you want */
+  border: 0px dashed blue; /* A dashed border to show it's an upload area */
+  position: relative; /* If you want to position child elements */
+  cursor: pointer; /* Same as other stickers */
+}
+
+/* The plus sign or text inside the upload button */
+.upload-label {
+  color: blue; /* Matches your theme */
+  font-size: 28px; /* Make it stand out */
+  font-weight: bold;
+  line-height: 1;
+  justify-content: center;
+}
+
+/* Hover effect for the upload button, optional */
+.custom-sticker-upload:hover {
+  background-color: #3bd0e6; /* Lighter hover effect */
+  transform: scale(1.05); 
+}
+
+/* Active effect for the upload button, optional */
+.custom-sticker-upload:active {
+  transform: scale(1);
+  background-color: #1a90ff; /* Darker blue on click */
+}
+
+#stickersContainer {
+  width: 500px;        /* Enough for 8 items x 55px plus some gap if needed */
+  display: flex;
+  flex-wrap: wrap;     /* So first 8 go on line 1, next 8 on line 2 */
+  gap: 5px;            /* small spacing between items */
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.sticker-option,
+.custom-sticker-upload {
+  display: inline-block !important; /* Ensures they sit side by side */
+  vertical-align: top;             /* Keep them aligned at the top row */
+  margin: 0;                       /* Remove label’s margin if needed */
+  padding: 0;                      /* Up to you if you want any padding */
 }
