@@ -305,38 +305,61 @@ body {
   flex-direction: row;
 }
 
+/* Sticker container and the custom sticker upload button */
+.sticker-option,
 .custom-sticker-upload {
-  /* Match the size of other stickers */
+  /* Keep them side-by-side if you want, but remove/override conflicting rules */
+  display: inline-block !important;
+  vertical-align: top; 
+  margin: 0;
+  padding: 0;
+}
+
+/* Custom Sticker Upload Button */
+.custom-sticker-upload {
   width: 55px;
   height: 55px;
-  display: inline-flex; /* So we can center the plus sign */
-  align-items: center; /* Vertically center content */
-  justify-content: center; /* Horizontally center content */
-  background-color: black; /* Or another color you want */
-  border: 0px dashed blue; /* A dashed border to show it's an upload area */
-  position: relative; /* If you want to position child elements */
-  cursor: pointer; /* Same as other stickers */
+
+  /* Position relative so we can absolutely center the child */
+  position: relative;  
+
+  background-color: black;
+  border: 1px solid blue; 
+  box-shadow: 0px 0px 15px rgba(0, 0, 255, 0.5); /* Glow effect */
+  cursor: pointer;
+  transition: background-color 0.3s ease, 
+              transform 0.2s ease, 
+              border 0.3s ease; /* Smooth transitions */
 }
 
-/* The plus sign or text inside the upload button */
-.upload-label {
-  color: blue; /* Matches your theme */
-  font-size: 28px; /* Make it stand out */
-  font-weight: bold;
-  line-height: 1;
-  justify-content: center;
-}
-
-/* Hover effect for the upload button, optional */
+/* Hover and active states */
 .custom-sticker-upload:hover {
-  background-color: #3bd0e6; /* Lighter hover effect */
-  transform: scale(1.05); 
+  background-color: #3bd0e6; 
+  transform: scale(1.05);
+  border-color: blue;
 }
 
-/* Active effect for the upload button, optional */
 .custom-sticker-upload:active {
+  background-color: #1a90ff; 
   transform: scale(1);
-  background-color: #1a90ff; /* Darker blue on click */
+  border-color: #1a90ff;
+}
+
+/* Upload Label (the plus sign) */
+.upload-label {
+  /* Absolutely center within the parent */
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -60%);
+
+  color: blue;
+  font-size: 45px;
+  font-weight: lighter;
+  line-height: 1;
+  text-align: center;
+  margin: 0;
+  padding: 0;
 }
 
 #stickersContainer {
@@ -348,10 +371,3 @@ body {
   justify-content: flex-start;
 }
 
-.sticker-option,
-.custom-sticker-upload {
-  display: inline-block !important; /* Ensures they sit side by side */
-  vertical-align: top;             /* Keep them aligned at the top row */
-  margin: 0;                       /* Remove label’s margin if needed */
-  padding: 0;                      /* Up to you if you want any padding */
-}
